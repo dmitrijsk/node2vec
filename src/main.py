@@ -135,6 +135,7 @@ def main(args):
     print("SGD")
     learn_embeddings(walks)
 
+
 if __name__ == "__main__":
     args = parse_args()
     main(args)
