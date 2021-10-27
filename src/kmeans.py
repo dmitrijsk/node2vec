@@ -23,8 +23,8 @@ def get_data():
     if DATA_NAME == "les_miserables":
         return nx.generators.social.les_miserables_graph()
     else:
-        return nx.readwrite.edgelist.read_edgelist(f"graph/{DATA_NAME}/{DATA_NAME}.edges", 
-                                                   delimiter = args["edgelist_delim"])
+        return nx.readwrite.edgelist.read_edgelist(args["edgelist_fname"], 
+                                                   delimiter = " ")
 
 def set_other_parameters():
     """Set q and the number of clusters as in the original paper,
