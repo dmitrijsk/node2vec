@@ -25,7 +25,7 @@ The following are three examples of downstream machine learning tasks that we im
 | Classification ([see below](#classification))    | [Yasser Kaddoura](https://github.com/YasserKa)  |
 | Link prediction ([see below](#link-prediction))  | [Hardy Hasan](https://github.com/HardyHasan94)  |
 
-No manual feature engineering is required. The following figure from [3] summarizes the goal of the graph representation learning:
+No manual feature engineering is required. The following figure from [3] summarizes the goal of graph representation learning:
 
 <img src="./images/RepresentationLearning.png" height="150">
 
@@ -48,8 +48,8 @@ python -m pip install -r node2vec/requirements.txt
 
 ### Introduction
 
-We are sometimes interested in identifying homogenuous group of nodes in a network. 
-However, homegeneity can be defined in various ways. 
+We are sometimes interested in identifying homogeneous groups of nodes in a network. 
+However, homogeneity can be defined in various ways. 
 According to [1], node2vec can compute embeddings of nodes with emphasis on either **homophily** or **structural equivalence**. 
 This is illustrated in a figure below from [1]:
 
@@ -58,10 +58,12 @@ This is illustrated in a figure below from [1]:
 Under the **homophily** hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together.
 E.g., nodes *s1* and *u* in Figure 1 belong to the same network community
 
-Under the **structural equivalence** assumption nodes that have similar structural roles in networks should be embedded closely together.
+Under the **structural equivalence** assumption, nodes with similar structural roles in networks should be closely embedded.
 E.g., nodes *u* and *s6* in Figure 1 act as hubs of their corresponding communities.
 
-Unfortunately, clustering under the **structural equivalence** assumption could not be reproduced in this and a few other works. Mode details below.
+Unfortunately, it appears that clustering under the **structural equivalence** hypothesis cannot be reproduced. 
+However, we managed to capture the structural equivalence between nodes using a different algorithm, struc2vec. 
+Mode on this below.
 
 
 
@@ -75,34 +77,47 @@ and *k*-means for clustering with *k=6* clusters.
 | -------- | -------- | 
 | <img src="./images/fig1-top.png" width="300"> | <img src="./images/les_miserables/repr-fig3-top-hom.png" width="450">  |
 
-It is not exactly 1-to-1, but is sufficiently close.
+It is not exactly 1-to-1 but is sufficiently close.
 
-Unfortunately, clustering under the **structural equivalence** hypothesis could not be reproduced with *p=1*, *q=2* and 3 clusters. 
+Clustering under the **structural equivalence** hypothesis could not be reproduced with the recommended *p=1*, *q=2*, and 3 clusters hyper-parameters. 
 It turns out that this is a known issue: 
 
-* According to [4], even with grid-search over hyper-parameters, no result could capture the structural equivalence. 
+* According to [4], no result could capture the structural equivalence even with grid-search over hyper-parameters. 
 The graph kept representing the community structure.
 * According to [5], node2vec should not even be capable of capturing the notion of structural equivalence. 
 The reason is that two nodes that are "far" in the network will tend to be separated in the latent representation, 
 independent of their local structure. 
 
-The summary below shows from left to right: the original figure from [1] reflecting structural equivalence, 
-our reproduction with node2vec embeddings with the recommended hyper-parameters, 
-our reproduction with struc2vec embeddings (official implementation available [here](https://github.com/leoribeiro/struc2vec)).   
+The table below summarizes our experiments: 
+
+* Left: the original figure from [1] reflects structural equivalence.
+* Middle: our reproduction with node2vec embeddings with the recommended hyper-parameters that fail to capture the structural equivalence.
+* Right: our reproduction with struc2vec embeddings that does not fully reproduce the original figure, but it does reflect the structural equivalence.
+Yellow nodes mostly represent the novel's characters that are at the periphery and have limited interaction. 
+And blue-colored nodes represent characters that act as bridges between different sub-plots of the novel.
 
 
-| Structual equivalence: Bottom of Figure 3 in [1] | Our reproduction with node2vec | Our reproduction with struc2vec | 
+| Structural equivalence: Bottom of Figure 3 in [1] | Our reproduction with node2vec | Our reproduction with struc2vec | 
 | -------- | -------- | -------- |  
 | <img src="./images/fig1-bottom.png" width="300"> | <img src="./images/les_miserables/repr-fig3-bottom-str-eq-node2vec.png" width="450">  | <img src="./images/les_miserables/repr-fig3-bottom-str-eq-struc2vec.png" width="450"> |
 
-node2vec embeddings (middle) clearly fail to capture the structural equivalence. 
-struc2vec embeddings do not fully reproduce the original figure, but it does reflect the structural equivalence.
-Yellow nodes mostrly represent characters that are at the periphery and have limited interaction. 
-And blue-colored nodes represent characters that act as bridges between different sub-plots of the novel.
 
-[4] Schliski, F., Schlötterer, J., & Granitzer, M. (2020). Influence of Random Walk Parametrization on Graph Embeddings. Advances in Information Retrieval, 12036, 58. \
-[5] Ribeiro, L. F., Saverese, P. H., & Figueiredo, D. R. (2017, August). struc2vec: Learning node representations from structural identity. In Proceedings of the 23rd ACM SIGKDD international conference on knowledge discovery and data mining (pp. 385-394).
+[4] Schliski, F., Schlötterer, J., & Granitzer, M. (2020). Influence of Random Walk Parametrization on Graph Embeddings. 
+Advances in Information Retrieval, 12036, 58. \
+[5] Ribeiro, L. F., Saverese, P. H., & Figueiredo, D. R. (2017, August). struc2vec: Learning node representations from structural identity. 
+In Proceedings of the 23rd ACM SIGKDD international conference on knowledge discovery and data mining (pp. 385-394). 
+Official implementation on GitHub available [here](https://github.com/leoribeiro/struc2vec).
 
+
+### Clustering of the TerroristRel network
+
+We use a TerroristRel network [6], the network of terrorists and their relationships, as an additional network example not used in [1].
+Below is a clustering of the TerroristRel network with *p=1*, *q=0.5* and 10 clusters reflecting homophily.
+Therefore, these clusters highlight highly interconnected terrorists that belong to similar communities.
+
+<img src="./images/TerroristRel/TerroristRel_d_16_l_80_k_10_p_1_q_0.5_kmeans_10_clusters_node2vec_homophily.png">
+
+[6] https://networkrepository.com/TerroristRel.php
 
 
 ### Python implementation
@@ -111,13 +126,13 @@ Code is available in `src/kmeans.py`. To run the code from the command line use:
 
 `python src/kmeans.py`
 
-The initial purpose was to reproduce Figure 3 in node2vec paper. Therefore, the default type of analysis is homophily clustering of Les Misérables characters. To use the code for other purposes, please read below about changing parameter values.
+The initial purpose was to reproduce Figure 3 in node2vec paper. Therefore, the default type of analysis is homophily clustering of Les Misérables characters. Please read below about changing parameter values to use the code for other purposes.
 
 Three types of analyses are supported: 
 
 1. Homophily (community structure) with node2vec embeddings.
-2. Structural equivalance with node2vec embeddings.
-3. Structural equivalance with struc2vec embeddings. struc2vec embeddings for Les Misérables and [TerroristRel](https://networkrepository.com/TerroristRel.php) data sets are already available. To obtain embeddings for other data sets in Python 3 consider using, for example, [BioNEV](https://github.com/xiangyue9607/BioNEV).
+2. Structural equivalence with node2vec embeddings.
+3. Structural equivalence with struc2vec embeddings. struc2vec embeddings for Les Misérables and [TerroristRel](https://networkrepository.com/TerroristRel.php) data sets are already available. To obtain embeddings for other data sets in Python 3 consider using, for example, [BioNEV](https://github.com/xiangyue9607/BioNEV).
 
 Change the value of the `SWITCH` variable to define the type of analysis. Available options are `homophily`, `str_eq`, `struc2vec`.
 
@@ -144,11 +159,11 @@ Code is available in `src/classification.ipynb` (Jupyter Notebook)
 Sections of the notebook: 
 - Replicate the classification experiment in section **4.3 Multi-label classification** 
 - Grid search on `p` and `q`
-- Scalability test (not used in presentataion)
+- Scalability test (not used in presentation)
 ## Link Prediction
-- The files src/dataProcessing.py, src/main.py and src/linkPrediction.py are used for link prediction.
+- The files src/dataProcessing.py, src/main.py, and src/linkPrediction.py are used for link prediction.
 - Given an original edgelist, link prediction is performed as follows, where the data used is karate.edgelist:
-1. To obtain training graph and testing edges, execute the following command from the project home directory:
+1. To obtain a training graph and testing edges, execute the following command from the project home directory:
 ```python3 src/dataProcessing.py --input_path graph/karate/karate.edgelist --output_train_path graph/karate/train_edges --output_test_path graph/karate/test_edges --testing_data_ratio 0.2```
 2. To obtain node embeddings, execute the following command from the project home directory: 
 ```python3 src/main.py --input graph/karate/train_edges --output emb/karate.emb     ```
