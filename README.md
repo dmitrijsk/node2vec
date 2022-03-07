@@ -6,28 +6,28 @@ Team members are [Dmitrijs Kass](https://github.com/dmitrijsk),
 and [Yasser Kaddoura](https://github.com/YasserKa).
 
 The goal of the project is two-fold: 
-* reproduce the experimental results in **node2vec: Scalable Feature Learning for Networks** [1],
+* reproduce the experimental results in **node2vec: Scalable Feature Learning for Networks** [1] with Python,
 * perform additional experiments with network graphs not used in the above-mentioned paper. 
 
 [1] Grover, A., & Leskovec, J. (2016, August). node2vec: Scalable feature learning for networks. In *Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining* (pp. 855-864). [https://doi.org/10.1145/2939672.2939754](https://doi.org/10.1145/2939672.2939754) 
 
 ## What is node2vec?
 
+<img src="./images/RepresentationLearning.png" height="150">
+
+The figure above from [3] summarizes the goal of graph representation learning achieved by node2vec.
 node2vec is an algorithmic framework for representational learning on graphs. 
 Given any graph, it can learn continuous feature representations for the nodes, 
 which can then be used for various downstream machine learning tasks [2]. 
+No manual feature engineering is required. 
 
-The following are three examples of downstream machine learning tasks that we implemented in this repo: 
+We implemented the following downstream machine learning tasks with node2vec in this repo: 
 
 | Task | Student | 
 | -------- | -------- | 
 | Clustering ([see below](#clustering))            | [Dmitrijs Kass](https://github.com/dmitrijsk)   |
 | Classification ([see below](#classification))    | [Yasser Kaddoura](https://github.com/YasserKa)  |
 | Link prediction ([see below](#link-prediction))  | [Hardy Hasan](https://github.com/HardyHasan94)  |
-
-No manual feature engineering is required. The following figure from [3] summarizes the goal of graph representation learning:
-
-<img src="./images/RepresentationLearning.png" height="150">
 
 [2] node2vec project page: [https://snap.stanford.edu/node2vec](https://snap.stanford.edu/node2vec). \
 [3] Stanford CS224W: Machine Learning with Graphs. Lecture "Node embeddings" slides. Available [here](http://web.stanford.edu/class/cs224w/slides/03-nodeemb.pdf).
@@ -122,9 +122,22 @@ Therefore, these clusters highlight highly interconnected terrorists that belong
 
 ### Python implementation
 
-Code is available in `src/kmeans.py`. To run the code from the command line use:
+To run the node2vec for some network and perform clustering on it, run
 
 `python src/kmeans.py`
+
+Use the following arguments:
+
+`--path_to_edgelist` - path to the *.edgelist file that represents the network. \
+`--edgelist_sep` - separator used in the edgelist file. Default: `,` \
+`--p` - return parameter. Default: 1 \
+`--q` - in-out parameter. Default: 0.5\
+`--d` - dimensionality of embeddings. Default: 16\
+`--k` - window (context) size. Default: 10\
+`--l` - walk length. Default: 80\
+`--n_clusters` - number of k-means clusters.
+
+
 
 The initial purpose was to reproduce Figure 3 in node2vec paper. Therefore, the default type of analysis is homophily clustering of Les Misérables characters. Please read below about changing parameter values to use the code for other purposes.
 
