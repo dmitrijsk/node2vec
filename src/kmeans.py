@@ -14,7 +14,7 @@ def parse_args():
         "--demo",
         help="Run demo. \
               Options: les_miserables_homophily, les_miserables_str_eq_node2vec, les_miserables_str_eq_struc2vec",
-        default="les_miserables_homophily")
+        default="")
 
     parser.add_argument(
         "--path_to_edgelist",
@@ -23,8 +23,8 @@ def parse_args():
 
     parser.add_argument(
         "--edgelist_sep",
-        help="Separator used in the edgelist file. Default: ,",
-        default=",")
+        help="Separator used in the edgelist file. Default: space",
+        default=" ")
 
     parser.add_argument(
         "--p",
@@ -70,66 +70,50 @@ def parse_args():
     return parser.parse_args()
 
 
-# SWITCH = "struc2vec"  # homophily, str_eq, struc2vec
-
-# DATA_NAME = "les_miserables"  # les_miserables, TerroristRel
-# TerroristRel: https://networkrepository.com/TerroristRel.php
-
-# args = {"edgelist_fname": f"graph/{DATA_NAME}/{DATA_NAME}.edgelist",
-#         "edgelist_delim": ",",
-#         "D": 16,
-#         "P": 1,
-#         "K": 10,  # window_size = context size k, default = 10.
-#         "L": 80  # walk_length = l, default = 80.
-#         }
-
-
 def update_args(args):
     """Set arguments for demos."""
+
+    args.params = f"d_{args.d}_l_{args.l}_k_{args.k}_p_{args.p}_q_{args.q}"
+    args.data = os.path.basename(args.path_to_edgelist).split(".")[0]
+    args.emb_filename = f"emb/{args.data}/{args.data}_{args.params}.emb"
 
     if args.demo == "les_miserables_homophily":
         args.path_to_edgelist = "graph/les_miserables/les_miserables.edgelist"
         args.p, args.q, args.n_clusters = 1, 0.5, 6
         args.cmap = ["#d7191c", "#d4e4bd", "#e7745d", "#f7d09e", "#2c7bb6", "#80afb9"]
+        args.params = f"d_{args.d}_l_{args.l}_k_{args.k}_p_{args.p}_q_{args.q}"
+        args.data = os.path.basename(args.path_to_edgelist).split(".")[0]
+        args.emb_filename = f"emb/{args.data}/{args.data}_{args.params}.emb"
 
     elif args.demo == "les_miserables_str_eq_node2vec":
         args.path_to_edgelist = "graph/les_miserables/les_miserables.edgelist"
         args.p, args.q, args.n_clusters = 1, 2, 3
         args.cmap = ["#2c7bb6", "#d7191c", "#e9ebb2"]
+        args.params = f"d_{args.d}_l_{args.l}_k_{args.k}_p_{args.p}_q_{args.q}"
+        args.data = os.path.basename(args.path_to_edgelist).split(".")[0]
+        args.emb_filename = f"emb/{args.data}/{args.data}_{args.params}.emb"
 
     elif args.demo == "les_miserables_str_eq_struc2vec":
         args.path_to_edgelist = "graph/les_miserables/les_miserables.edgelist"
-        args.p, args.q, args.n_clusters = 1, 2, 4
+        args.n_clusters = 4
         args.cmap = ["#2c7bb6", "#d7191c", "#e9ebb2", "#d7191c"]
+        args.params = f"d_16_l_80_k_10_struc2vec"
+        args.data = os.path.basename(args.path_to_edgelist).split(".")[0]
+        # struc2vec embeddings were created using https://github.com/xiangyue9607/BioNEV.
+        # Commands:
+        # cd BioNEV
+        # bionev --input ../node2vec/graph/les_miserables.edgelist \
+        #        --output ../node2vec/emb/les_miserables_struc2vec.emb \
+        #        --method struc2vec
+        #        --task link-prediction
+        #        --walk-length 80
+        #        --window-size 10
+        #        --dimensions 16
+        args.emb_filename = "emb/les_miserables/les_miserables_struc2vec.emb"
 
-    args.data = os.path.basename(args.path_to_edgelist).split(".")[0]
-    args.params = f"d_{args.d}_l_{args.l}_k_{args.k}_p_{args.p}_q_{args.q}"
-    args.emb_filename = f"emb/{args.data}/{args.data}_{args.params}.emb"
+
+
     return args
-
-    # if SWITCH == "homophily":
-    #     print("Search for homophily with node2vec...")
-    #     args["Q"] = 0.5
-    #     args["n_clusters"] = 6
-    #     args["plot_suffix"] = "node2vec_homophily"
-    #     get_emb_fname_for_node2vec()
-    #
-    # elif SWITCH == "str_eq":
-    #     print("Search for structural equivalence with node2vec...")
-    #     args["Q"] = 2
-    #     args["n_clusters"] = 3
-    #     args["plot_suffix"] = "node2vec_str_eq"
-    #     get_emb_fname_for_node2vec()
-    #
-    # elif SWITCH == "struc2vec":
-    #     print("Using for structural equivalence with struc2vec...")
-    #     args["n_clusters"] = 4
-    #     args["emb_fname"] = f"emb/{DATA_NAME}/{DATA_NAME}_struc2vec.emb"
-    #     args["plot_suffix"] = "str_eq"
-    #     args["params"] = "struc2vec"
-    #
-    # else:
-    #     raise Exception('Switch should be "homophily", "str_eq" or "struc2vec".')
 
 
 def save_fig(filename, h, w, dpi):
@@ -143,32 +127,33 @@ def save_fig(filename, h, w, dpi):
 def generate_node2vec_embeddings(args):
     """Execute node2vec to create embeddings."""
 
-    cmd = "python src/main.py " + \
-          "--input " + args.path_to_edgelist + \
-          " --output " + args.emb_filename + \
-          " --dimensions " + str(args.d) + \
-          " --walk-length " + str(args.l) + \
-          " --window-size " + str(args.k) + \
-          " --p " + str(args.p) + \
-          " --q " + str(args.q)
+    if args.demo != "les_miserables_str_eq_struc2vec":
+        cmd = "python src/main.py " + \
+              "--input " + args.path_to_edgelist + \
+              " --output " + args.emb_filename + \
+              " --dimensions " + str(args.d) + \
+              " --walk-length " + str(args.l) + \
+              " --window-size " + str(args.k) + \
+              " --p " + str(args.p) + \
+              " --q " + str(args.q)
 
-    print(f"Command: {cmd}")
-    os.system(cmd)
+        print(f"Command: {cmd}")
+        os.system(cmd)
 
 
-def read_embeddings(G):
+def read_embeddings(args, graph):
     """Read embeddings from an external file."""
-
-    node_names = list(G.nodes())  # Used to replace integers with character names.
 
     with open(args.emb_filename) as f:
         # Ignore the first line (# of nodes, # of dimensions).
         emb = f.read().splitlines()[1:]
 
     emb = [e.split() for e in emb]  # Split with whitespace.
-    emb = {node_names[int(e[0])]: [float(ee) for ee in e[1:]] for e in emb}  # Convert embeddings to float.
-    emb_lst = list(emb.values())
 
+    node_names = list(graph.nodes())  # Used to replace integers with character names.
+    emb = {node_names[int(e[0])]: [float(ee) for ee in e[1:]] for e in emb}  # Convert embeddings to float.
+
+    emb_lst = list(emb.values())
     return emb, emb_lst, node_names
 
 
@@ -184,7 +169,6 @@ def plot_elbow_method(emb_lst):
     plt.plot(list(sse.keys()), list(sse.values()))
     plt.xlabel("Number of clusters")
     plt.ylabel("SSE")
-    save_fig(f"images/{args.data}/elbow.png", h=5, w=7, dpi=200)
     plt.show()
 
 
@@ -194,7 +178,7 @@ def plot_network_with_clusters(emb, kmeans, node_names):
     node_keys = list(emb.keys())
     node_clusters = kmeans.labels_
     if not hasattr(args, 'cmap'):
-        args.cmap = cm.get_cmap('Set1', args["n_clusters"])
+        args.cmap = [cm.get_cmap('Set1', args.n_clusters)(k) for k in range(args.n_clusters)]
     color_map = []
     for node_name in node_names:
         name_index = node_keys.index(node_name)
@@ -219,12 +203,12 @@ if __name__ == "__main__":
     args = update_args(args)
     # Get network graph data.
     G = nx.readwrite.edgelist.read_edgelist(args.path_to_edgelist, delimiter=args.edgelist_sep)
-    # Prerequisite: cloned node2vec repo.
+    # Get embeggings
     generate_node2vec_embeddings(args)
     # Import embeddings.
-    emb, emb_lst, node_names = read_embeddings(G)
+    emb, emb_lst, node_names = read_embeddings(args, G)
     # k-means clustering with embeddings as features.
-    kmeans = KMeans(n_clusters=args["n_clusters"], random_state=0).fit(emb_lst)
-
+    kmeans = KMeans(n_clusters=args.n_clusters, random_state=0).fit(emb_lst)
     plot_elbow_method(emb_lst)
+    # Plot network clusters.
     plot_network_with_clusters(emb, kmeans, node_names)
