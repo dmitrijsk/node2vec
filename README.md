@@ -1,3 +1,45 @@
+# node2vec group project 
+
+This project is a part of the [Data Mining course](https://www.uu.se/en/admissions/master/selma/kursplan/?kKod=1DL370&lasar=) at Uppsala University, Sweden. 
+Team members are [Dmitrijs Kass](https://github.com/dmitrijsk), 
+[Hardy Hasan](https://github.com/HardyHasan94) 
+and [Yasser Kaddoura](https://github.com/YasserKa).
+
+The goal of the project is two-fold: 
+* reproduce the experimental results in [node2vec: Scalable Feature Learning for Networks
+](https://arxiv.org/abs/1607.00653),
+* perform additional experiments with graphs not used in the above mentioned paper. 
+
+## What is node2vec?
+
+node2vec is an algorithmic framework for representational learning on graphs. 
+Given any graph, it can learn continuous feature representations for the nodes, 
+which can then be used for various downstream machine learning tasks. Examples are 
+
+* Clustering of nodes with emphasis on either *homophily* or *structural equivalence*:
+    * Under the *homophily* hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together 
+      (e.g., nodes $s_1$ and $u$ in Figure 1 belong to the same network community)
+    * Under the *structural equivalence assumption* nodes that have similar structural roles in networks should be embedded closely together.
+      (e.g., nodes $u$ and $s_6$ in Figure 1 act as hubs of their corresponding communities).
+
+ <img src="./images/Figure1.png" height="150">
+
+## Dependencies
+
+This work was tested with Python 3.6.8, PyTorch 1.9.0, CUDA 11.5 and CentOS Linux release 7.9.2009 (Core). Create a new virtual environment and install all the necessary Python packages:
+
+```
+python3 -m venv attentionhtr-env
+source attentionhtr-env/bin/activate
+pip install --upgrade pip
+python3 -m pip install -r AttentionHTR/requirements.txt
+```
+
+## Content
+
+
+
+
 This is a fork from [aditya-grover/node2vec](https://github.com/aditya-grover/node2vec).
 
 
