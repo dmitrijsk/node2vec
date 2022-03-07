@@ -65,12 +65,7 @@ Unfortunately, clustering under the **structural equivalence** assumption could 
 
 
 
-
-
-
-### Contribution
-
-#### Reproduction of Figure 3 in [1]
+### Reproduction of Figure 3 in [1]
 
 Below is a reproduction of **homogeneity** clustering of characters in the novel Les Misérabthe, which is at the top of Figure 3 in [1]. 
 The reproduced figure uses node2vec for node embeddings with the return parameter *p=1* and in-out parameter *q=0.5* 
@@ -82,24 +77,33 @@ and *k*-means for clustering with *k=6* clusters.
 
 It is not exactly 1-to-1, but is sufficiently close.
 
-Unfortunately, clustering under the **structural equivalence** hypothesis could not be reproduced with *p=1*, *q=2* and 3 clusters:
+Unfortunately, clustering under the **structural equivalence** hypothesis could not be reproduced with *p=1*, *q=2* and 3 clusters. 
+It turns out that this is a known issue: 
+
+* According to [4], even with grid-search over hyper-parameters, no result could capture the structural equivalence. 
+The graph kept representing the community structure.
+* According to [5], node2vec should not even be capable of capturing the notion of structural equivalence. 
+The reason is that two nodes that are "far" in the network will tend to be separated in the latent representation, 
+independent of their local structure. 
+
+The summary below shows from left to right: the original figure from [1] reflecting structural equivalence, 
+our reproduction with node2vec embeddings with the recommended hyper-parameters, 
+our reproduction with struc2vec embeddings (official implementation available [here](https://github.com/leoribeiro/struc2vec)).   
+
 
 | Structual equivalence: Bottom of Figure 3 in [1] | Our reproduction with node2vec | Our reproduction with struc2vec | 
 | -------- | -------- | -------- |  
 | <img src="./images/fig1-bottom.png" width="300"> | <img src="./images/les_miserables/repr-fig3-bottom-str-eq-node2vec.png" width="450">  | <img src="./images/les_miserables/repr-fig3-bottom-str-eq-struc2vec.png" width="450"> |
 
-It turns out that
+node2vec embeddings (middle) clearly fail to capture the structural equivalence. 
+struc2vec embeddings do not fully reproduce the original figure, but it does reflect the structural equivalence.
+Yellow nodes mostrly represent characters that are at the periphery and have limited interaction. 
+And blue-colored nodes represent characters that act as bridges between different sub-plots of the novel.
 
-On page 61 Schlinski et al. [1] state that even with grid-search over hyper-parameters, no result could capture the structural equivalence. The graph kept representing the community structure.
-On page 2 Ribeiro et al. [2] state that DeepWalk and node2vec fail to capture the notion of structural equivalence.
+[4] Schliski, F., Schlötterer, J., & Granitzer, M. (2020). Influence of Random Walk Parametrization on Graph Embeddings. Advances in Information Retrieval, 12036, 58. \
+[5] Ribeiro, L. F., Saverese, P. H., & Figueiredo, D. R. (2017, August). struc2vec: Learning node representations from structural identity. In Proceedings of the 23rd ACM SIGKDD international conference on knowledge discovery and data mining (pp. 385-394).
 
 
-reflecting homogeneity (top). 
-* Can't reproduce 2
-* Could reproduce with struc2vec
-
-****
- for homogeneity clustering using node2vec and structural equivalence clustering using struc2vec.
 
 ### Python implementation
 
