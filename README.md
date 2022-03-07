@@ -6,9 +6,10 @@ Team members are [Dmitrijs Kass](https://github.com/dmitrijsk),
 and [Yasser Kaddoura](https://github.com/YasserKa).
 
 The goal of the project is two-fold: 
-* reproduce the experimental results in [node2vec: Scalable Feature Learning for Networks
-](https://arxiv.org/abs/1607.00653),
-* perform additional experiments with graphs not used in the above mentioned paper. 
+* reproduce the experimental results in **node2vec: Scalable Feature Learning for Networks** [1],
+* perform additional experiments with network graphs not used in the above-mentioned paper. 
+
+[1] Grover, A., & Leskovec, J. (2016, August). node2vec: Scalable feature learning for networks. In *Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining* (pp. 855-864). [https://doi.org/10.1145/2939672.2939754](https://doi.org/10.1145/2939672.2939754) 
 
 ## What is node2vec?
 
@@ -16,40 +17,36 @@ node2vec is an algorithmic framework for representational learning on graphs.
 Given any graph, it can learn continuous feature representations for the nodes, 
 which can then be used for various downstream machine learning tasks. Examples are 
 
-* Clustering of nodes with emphasis on either *homophily* or *structural equivalence*:
-    * Under the *homophily* hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together 
-      (e.g., nodes $s_1$ and $u$ in Figure 1 belong to the same network community)
-    * Under the *structural equivalence assumption* nodes that have similar structural roles in networks should be embedded closely together.
-      (e.g., nodes $u$ and $s_6$ in Figure 1 act as hubs of their corresponding communities).
+* Clustering of nodes with emphasis on either *homophily* or *structural equivalence*. Implementation [here below](#clustering) by [Dmitrijs Kass](https://github.com/dmitrijsk).
+* Classification. Implementation [here below](#classification) by [Yasser Kaddoura](https://github.com/YasserKa).
+* Link prediction. Imlpementation [here below](#link-prediction) by [Hardy Hasan](https://github.com/HardyHasan94).
 
- <img src="./images/Figure1.png" height="150">
 
 ## Dependencies
 
-This work was tested with Python 3.6.8, PyTorch 1.9.0, CUDA 11.5 and CentOS Linux release 7.9.2009 (Core). Create a new virtual environment and install all the necessary Python packages:
+This repo is a fork from [the official reference implementation](https://github.com/aditya-grover/node2vec) of [1].
+Clone the current repo and create the `conda` virtual environment:
 
 ```
-python3 -m venv attentionhtr-env
-source attentionhtr-env/bin/activate
-pip install --upgrade pip
-python3 -m pip install -r AttentionHTR/requirements.txt
+git clone https://github.com/dmitrijsk/node2vec.git
+conda create -n node2vec-env python=3.8
+conda activate node2vec-env
+python -m pip install -r node2vec/requirements.txt
 ```
 
-## Content
 
 
-
-
-This is a fork from [aditya-grover/node2vec](https://github.com/aditya-grover/node2vec).
-
-
-To run the code, install packages in `requirements.txt` file.
-
-Check the original repository for instructions to run node2vec.
-
-Adding to the node2vec algorithm, we included more code of our own to replicate the experiments mentioned in the paper and a number of experiments:
 
 ## Clustering
+
+    * Under the *homophily* hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together 
+      (e.g., nodes *s1* and *u* in Figure 1 belong to the same network community)
+    * Under the *structural equivalence assumption* nodes that have similar structural roles in networks should be embedded closely together.
+      (e.g., nodes *u* and *s6* in Figure 1 act as hubs of their corresponding communities).
+
+ <img src="./images/Figure1.png" height="200">
+
+
 
 Code is available in `src/kmeans.py`. To run the code from the command line use:
 
