@@ -70,13 +70,29 @@ Unfortunately, clustering under the **structural equivalence** assumption could 
 
 ### Contribution
 
-**Reproduction of Figure 3 in [1]**
+#### Reproduction of Figure 3 in [1]
 
-Below is a reproduction of the top part of Figure 3 in [1] reflecting homogeneity using Les Misérables coappearance network:
+Below is a reproduction of **homogeneity** clustering of characters in the novel Les Misérabthe, which is at the top of Figure 3 in [1]. 
+The reproduced figure uses node2vec for node embeddings with the return parameter *p=1* and in-out parameter *q=0.5* 
+and *k*-means for clustering with *k=6* clusters.
 
-| Top of figure 3 from [1] | Reproduction with node2vec, *p=1*, *q=0.5*, 6 clusters. | 
+| Homogeneity: Top of Figure 3 in [1] | Our reproduction with node2vec | 
 | -------- | -------- | 
-| <img src="./images/Figure3top.png" width="300"> | <img src="./images/les_miserables/reproduction-figure-3-top-homogeneity.png" width="400">  |
+| <img src="./images/fig1-top.png" width="300"> | <img src="./images/les_miserables/repr-fig3-top-hom.png" width="450">  |
+
+It is not exactly 1-to-1, but is sufficiently close.
+
+Unfortunately, clustering under the **structural equivalence** hypothesis could not be reproduced with *p=1*, *q=2* and 3 clusters:
+
+| Structual equivalence: Bottom of Figure 3 in [1] | Our reproduction with node2vec | Our reproduction with struc2vec | 
+| -------- | -------- | -------- |  
+| <img src="./images/fig1-bottom.png" width="300"> | <img src="./images/les_miserables/repr-fig3-bottom-str-eq-node2vec.png" width="450">  | <img src="./images/les_miserables/repr-fig3-bottom-str-eq-struc2vec.png" width="450"> |
+
+It turns out that
+
+On page 61 Schlinski et al. [1] state that even with grid-search over hyper-parameters, no result could capture the structural equivalence. The graph kept representing the community structure.
+On page 2 Ribeiro et al. [2] state that DeepWalk and node2vec fail to capture the notion of structural equivalence.
+
 
 reflecting homogeneity (top). 
 * Can't reproduce 2

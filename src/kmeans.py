@@ -4,7 +4,7 @@ import networkx as nx
 from sklearn.cluster import KMeans
 from matplotlib import cm
 
-SWITCH = "homophily" # homophily, str_eq, struc2vec
+SWITCH = "struc2vec" # homophily, str_eq, struc2vec
 
 DATA_NAME = "les_miserables" # les_miserables, TerroristRel
 # TerroristRel: https://networkrepository.com/TerroristRel.php
@@ -155,7 +155,9 @@ def plot_network_with_clusters(emb, kmeans, node_names):
     
     
     cmap = cm.get_cmap('Set1', args["n_clusters"])
-    cmap = ["#d7191c", "#d4e4bd", "#e7745d", "#f7d09e", "#2c7bb6", "#80afb9"]
+    # Colors for reproducing Figure 1, top: cmap = ["#d7191c", "#d4e4bd", "#e7745d", "#f7d09e", "#2c7bb6", "#80afb9"]
+    # Colors for reproducing Figure 1, bottom with struc2vec: cmap = ["#2c7bb6", "#d7191c", "#e9ebb2"]
+    # Colors for reproducing Figure 1, bottom with struc2vec: cmap = ["#2c7bb6", "#d7191c", "#e9ebb2", "#d7191c"]
     color_map = []
     for node_name in node_names:
         name_index = node_keys.index(node_name)
