@@ -27,7 +27,7 @@ The following are three examples of downstream machine learning tasks that we im
 
 No manual feature engineering is required. The following figure from [3] summarizes the goal of the graph representation learning:
 
-<img src="./images/RepresentationLearning.png" height="200">
+<img src="./images/RepresentationLearning.png" height="150">
 
 [2] node2vec project page: [https://snap.stanford.edu/node2vec](https://snap.stanford.edu/node2vec). \
 [3] Stanford CS224W: Machine Learning with Graphs. Lecture "Node embeddings" slides. Available [here](http://web.stanford.edu/class/cs224w/slides/03-nodeemb.pdf).
@@ -35,7 +35,7 @@ No manual feature engineering is required. The following figure from [3] summari
 ## Dependencies
 
 This repo is a fork from [the official reference implementation](https://github.com/aditya-grover/node2vec) of [1].
-Clone the current repo and create the `conda` virtual environment:
+Clone the current repo, create the `conda` virtual environment and install the requirements:
 
 ```
 git clone https://github.com/dmitrijsk/node2vec.git
@@ -44,28 +44,46 @@ conda activate node2vec-env
 python -m pip install -r node2vec/requirements.txt
 ```
 
-
-
-
 ## Clustering
 
 ### Introduction
 
-Clustering of nodes with emphasis on either homophily or structural equivalencein node2vec 
-    * Under the *homophily* hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together 
-      (e.g., nodes *s1* and *u* in Figure 1 belong to the same network community)
-    * Under the *structural equivalence assumption* nodes that have similar structural roles in networks should be embedded closely together.
-      (e.g., nodes *u* and *s6* in Figure 1 act as hubs of their corresponding communities).
+We are sometimes interested in identifying homogenuous group of nodes in a network. 
+However, homegeneity can be defined in various ways. 
+According to [1], node2vec can compute embeddings of nodes with emphasis on either **homophily** or **structural equivalence**. 
+This is illustrated in a figure below from [1]:
 
- <img src="./images/Figure1.png" height="200">
+<img src="./images/Figure1.png" height="150">
+
+Under the **homophily** hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together.
+E.g., nodes *s1* and *u* in Figure 1 belong to the same network community
+
+Under the **structural equivalence** assumption nodes that have similar structural roles in networks should be embedded closely together.
+E.g., nodes *u* and *s6* in Figure 1 act as hubs of their corresponding communities.
+
+Unfortunately, clustering under the **structural equivalence** assumption could not be reproduced in this and a few other works. Mode details below.
+
+
+
 
 
 
 ### Contribution
 
-* Reproduce 1
+**Reproduction of Figure 3 in [1]**
+
+Below is a reproduction of the top part of Figure 3 in [1] reflecting homogeneity using Les Misérables coappearance network:
+
+| Top of figure 3 from [1] | Reproduction with node2vec, *p=1*, *q=0.5*, 6 clusters. | 
+| -------- | -------- | 
+| <img src="./images/Figure3top.png" width="300"> | <img src="./images/les_miserables/reproduction-figure-3-top-homogeneity.png" width="400">  |
+
+reflecting homogeneity (top). 
 * Can't reproduce 2
 * Could reproduce with struc2vec
+
+****
+ for homogeneity clustering using node2vec and structural equivalence clustering using struc2vec.
 
 ### Python implementation
 

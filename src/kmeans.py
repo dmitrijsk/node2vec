@@ -155,19 +155,20 @@ def plot_network_with_clusters(emb, kmeans, node_names):
     
     
     cmap = cm.get_cmap('Set1', args["n_clusters"])
+    cmap = ["#d7191c", "#d4e4bd", "#e7745d", "#f7d09e", "#2c7bb6", "#80afb9"]
     color_map = []
     for node_name in node_names:
         name_index = node_keys.index(node_name)
         cluster = node_clusters[name_index]
-        color_map.append(cmap(cluster))
+        color_map.append(cmap[cluster])
      
     nx.draw(G, node_color=color_map,
-            with_labels = True, # CHANGE HERE TO ADD LABELS!
+            with_labels = False, # CHANGE HERE TO ADD LABELS!
             alpha = 0.7)
     save_fig(f"images/{DATA_NAME}/{DATA_NAME}_{args['params']}_kmeans_{args['n_clusters']}_clusters_{args['plot_suffix']}.png", 
-             h = 10, 
-             w = 20, 
-             dpi = 200)
+             h = 5,
+             w = 10,
+             dpi = 300)
     plt.show()
 
 
