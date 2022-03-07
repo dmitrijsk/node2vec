@@ -15,12 +15,22 @@ The goal of the project is two-fold:
 
 node2vec is an algorithmic framework for representational learning on graphs. 
 Given any graph, it can learn continuous feature representations for the nodes, 
-which can then be used for various downstream machine learning tasks. Examples are 
+which can then be used for various downstream machine learning tasks [2]. 
 
-* Clustering of nodes with emphasis on either *homophily* or *structural equivalence*. Implementation [here below](#clustering) by [Dmitrijs Kass](https://github.com/dmitrijsk).
-* Classification. Implementation [here below](#classification) by [Yasser Kaddoura](https://github.com/YasserKa).
-* Link prediction. Imlpementation [here below](#link-prediction) by [Hardy Hasan](https://github.com/HardyHasan94).
+The following are three examples of downstream machine learning tasks that we implemented in this repo: 
 
+| Task | Student | 
+| -------- | -------- | 
+| Clustering ([see below](#clustering))            | [Dmitrijs Kass](https://github.com/dmitrijsk)   |
+| Classification ([see below](#classification))    | [Yasser Kaddoura](https://github.com/YasserKa)  |
+| Link prediction ([see below](#link-prediction))  | [Hardy Hasan](https://github.com/HardyHasan94)  |
+
+No manual feature engineering is required. The following figure from [3] summarizes the goal of the graph representation learning:
+
+<img src="./images/RepresentationLearning.png" height="200">
+
+[2] node2vec project page: [https://snap.stanford.edu/node2vec](https://snap.stanford.edu/node2vec). \
+[3] Stanford CS224W: Machine Learning with Graphs. Lecture "Node embeddings" slides. Available [here](http://web.stanford.edu/class/cs224w/slides/03-nodeemb.pdf).
 
 ## Dependencies
 
@@ -39,6 +49,9 @@ python -m pip install -r node2vec/requirements.txt
 
 ## Clustering
 
+### Introduction
+
+Clustering of nodes with emphasis on either homophily or structural equivalencein node2vec 
     * Under the *homophily* hypothesis nodes that are highly interconnected and belong to similar network clusters or communities should be embedded closely together 
       (e.g., nodes *s1* and *u* in Figure 1 belong to the same network community)
     * Under the *structural equivalence assumption* nodes that have similar structural roles in networks should be embedded closely together.
@@ -47,6 +60,14 @@ python -m pip install -r node2vec/requirements.txt
  <img src="./images/Figure1.png" height="200">
 
 
+
+### Contribution
+
+* Reproduce 1
+* Can't reproduce 2
+* Could reproduce with struc2vec
+
+### Python implementation
 
 Code is available in `src/kmeans.py`. To run the code from the command line use:
 
