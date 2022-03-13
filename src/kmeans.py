@@ -111,8 +111,6 @@ def update_args(args):
         #        --dimensions 16
         args.emb_filename = "emb/les_miserables/les_miserables_struc2vec.emb"
 
-
-
     return args
 
 
@@ -203,7 +201,7 @@ if __name__ == "__main__":
     args = update_args(args)
     # Get network graph data.
     G = nx.readwrite.edgelist.read_edgelist(args.path_to_edgelist, delimiter=args.edgelist_sep)
-    # Get embeggings
+    # Get embeddings
     generate_node2vec_embeddings(args)
     # Import embeddings.
     emb, emb_lst, node_names = read_embeddings(args, G)

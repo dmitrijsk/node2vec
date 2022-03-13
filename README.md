@@ -65,11 +65,6 @@ E.g., nodes *s1* and *u* in Figure 1 belong to the same network community
 Under the **structural equivalence** assumption, nodes with similar structural roles in networks should be closely embedded.
 E.g., nodes *u* and *s6* in Figure 1 act as hubs of their corresponding communities.
 
-Unfortunately, it appears that clustering under the **structural equivalence** hypothesis cannot be reproduced. 
-However, we managed to capture the structural equivalence between nodes using a different algorithm, struc2vec. 
-Mode on this below.
-
-
 
 ### Reproduction of Figure 3 in [1]
 
@@ -92,7 +87,7 @@ The graph kept representing the community structure.
 The reason is that two nodes that are "far" in the network will tend to be separated in the latent representation, 
 independent of their local structure. 
 
-The table below summarizes our experiments: 
+The following summarizes our experiments w.r.t. the **structural equivalence**: 
 
 * Left: the original figure from [1] reflects structural equivalence.
 * Middle: our reproduction with node2vec embeddings with the recommended hyper-parameters that fail to capture the structural equivalence.
